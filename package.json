@@ -1,0 +1,29 @@
+{
+  "name": "turnopro-eu-capacitor",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:web": "node scripts/build.js",
+    "sync": "npm run build:web && cap sync",
+    "assets": "capacitor-assets generate --iconBackgroundColor #0f766e --splashBackgroundColor #eef2f3 --splashBackgroundColorDark #0e1517",
+    "android": "npm run sync && cap open android",
+    "ios": "npm run sync && cap open ios"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "jszip": "3.10.1",
+    "jspdf": "2.5.1",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/share": "^7.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "tailwindcss": "3.4.17",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/assets": "^3.0.5"
+  }
+}
