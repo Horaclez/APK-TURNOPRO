@@ -1,0 +1,53 @@
+name: Compilar APK TurnoPro EU
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configurar Java JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Verificar carpeta scripts
+        run: |
+          if [ -d script ] && [ ! -d scripts ]; then mv script scripts; fi
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Compilar web offline (generar www/)
+        run: npm run build:web
+
+      - name: Crear proyecto Android y generar íconos/splash
+        run: |
+          npx cap add android
+          npx capacitor-assets generate --android --iconBackgroundColor '#0f766e' --splashBackgroundColor '#eef2f3' --splashBackgroundColorDark '#0e1517'
+          npx cap sync android
+
+      - name: Compilar APK Debug
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Subir APK descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurnoPro-EU-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
